@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Fabio Oliveira_300275262</title>
+
+    <style>
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 80px;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .avg {
+            text-align: center;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .poster {
+            text-align: center;
+            padding-right: 105px;
+            padding-left: 105px;
+        }
+
+        .title {
+            text-align: center;
+            padding-right: 155px;
+            padding-left: 155px;
+        }
+
+        .release {
+            text-align: center;
+            padding-left: 62px;
+            padding-right: 62px;
+        }
+
+        .count {
+            text-align: center;
+            padding-right: 75px;
+            padding-left: 75px
+        }
+
+        .pop {
+            text-align: center;
+            padding-right: 45px;
+            padding-left: 45px
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Fabio Oliveira_300275262_Assign4</h3>
+    <h1>Movie Info</h1>
+    <div>
+        <a href="#" id="prv" onclick="previous();">
+            <<< 'Previous Page</a> / <a href="#" id="nxt" onclick="next();">Next Page'>>></a>
+    </div>
+    <div id="container"> </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script>
+
+        var previous = function () {
+            $(document).ready(function () {
+                $("#container").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=849e57c349ce618e1a3deeebac2e6aad&page=1',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#container').append('<table><tr>' +
+                            '<th class="poster">Poster</th>' +
+                            '<th class="title">Title</th>' +
+                            '<th class="release">Release Date</th>' +
+                            '<th class="avg">Average Rating</th>' +
+                            '<th class="count">Votes</th>' +
+                            '<th class="pop">Popularity Rank</th>' +
+                            '</tr>');
+                        for (var i = 0; i < 20; i++) {
+                            var text = '';
+                            text =
+                                '<tr>' +
+                                `<td><img src="https://image.tmdb.org/t/p/w92/${data.results[i].poster_path}"></td>` +
+                                `<td><a href="#" data-toggle="tooltip" data-placement="right" title='Overview: ${data.results[i].overview}'>${data.results[i].original_title}</a></td>` +
+                                `<td>${data.results[i].release_date}</td>` +
+                                `<td>${data.results[i].vote_average}</td>` +
+                                `<td>${data.results[i].vote_count}</td>` +
+                                `<td>${data.results[i].popularity}</td>` +
+                                '</tr></table>';
+                            $('#container').append(text);
+                            $('#container').append('</table>');
+                        }
+
+                    }
+                })
+
+            });
+        }
+
+        var next = function () {
+            $(document).ready(function () {
+                $("#container").empty();
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=849e57c349ce618e1a3deeebac2e6aad&page=2',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#container').append('<table><tr>' +
+                            '<th class="poster">Poster</th>' +
+                            '<th class="title">Title</th>' +
+                            '<th class="release">Release Date</th>' +
+                            '<th class="avg">Average Rating</th>' +
+                            '<th class="count">Votes</th>' +
+                            '<th class="pop">Popularity Rank</th>' +
+                            '</tr>');
+                        for (var i = 0; i < 20; i++) {
+                            var text = '';
+                            text =
+                                '<tr>' +
+                                `<td><img src="https://image.tmdb.org/t/p/w92/${data.results[i].poster_path}"></td>` +
+                                `<td><a href="#"  data-toggle="tooltip" data-placement="right" title='Overview: ${data.results[i].overview}'>${data.results[i].original_title}</a></td>` +
+                                `<td>${data.results[i].release_date}</td>` +
+                                `<td>${data.results[i].vote_average}</td>` +
+                                `<td>${data.results[i].vote_count}</td>` +
+                                `<td>${data.results[i].popularity}</td>` +
+                                '</tr></table>';
+                            $('#container').append(text);
+                            $('#container').append('</table>');
+                        }
+
+                    }
+                })
+
+            });
+        }
+        previous();
+
+    </script>
+    <div>
+        <a href="#" id="prv" onclick="previous();">
+            <<< 'Previous Page</a> / <a href="#" id="nxt" onclick="next();">Next Page'>>></a>
+    </div>
+
+</body>
+
+</html>
