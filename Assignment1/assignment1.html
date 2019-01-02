@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cards game</title>
+    <script src="index.js"></script>
+
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <tr>
+        <td>
+            <!-- card held by Computer -->
+            <p>Computer's Card:<div id="Computercards"></div></p>
+        
+            <!-- points of the each player and name of the winner -->
+            <p>Total Computer:<div id="result1"></div></p>
+        </td>
+            
+    </tr>
+    
+    <tr>
+        <td>
+            <!-- card held by player -->
+            <p>Player's Card:<div id="Playercards"></div></p>
+
+            <!-- points of the each player and name of the winner -->
+            <p>Total Player:<div id="result2"></div></p>
+        </td>
+    </tr>
+
+    <div id="score">
+        <table>
+            <!-- score of the each player-->
+            <caption>Score</caption>
+            <tr>
+                <th>Computer</th>
+                <th>Player 1</th>
+            </tr>
+            <tr>
+                <td><span id='wcomputer'>0</span></td>
+                <td><span id='wplayer'>0</span></td>
+            </tr>           
+        </table>  
+    </div>
+    
+    <div>
+        <button id="dealBtn">Deal</button>
+        <button id="resultBtn">Show</button>
+        <button id="scoreBtn">Score</button>
+    </div>
+        <script>
+                /* document.getElementById('dealBtn').addEventListener('click', initCards); */
+
+                document.getElementById('dealBtn').addEventListener('click', function(){
+                    //resetDisplay();
+                    shuffle();
+                    initCards();
+                    alert('Dealt!');
+                    dealt = true;
+                });
+                document.getElementById('scoreBtn').addEventListener('click', function(){
+                    if (!dealt) {
+                        alert('Deal first!');
+                        return;
+                    } else if (!shown) {
+                        alert('Show first!');
+                        return;
+                    }
+                    score();
+                    shown = false;
+                    dealt = false;
+                });
+
+                document.getElementById('resultBtn').addEventListener('click', function(){
+                    if (!dealt) {
+                        alert('Deal first!');
+                        return;
+                    }
+                    document.getElementById("Playercards").innerHTML = drawCards(3);
+                    document.getElementById("Computercards").innerHTML = drawCards(3);
+                    shown = true;
+                });
+                
+        </script>
+              
+</body>
+
+</html>
