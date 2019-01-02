@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+    <h2>Fabio Oliveira_300275262_Assignment2</h2>
+
+    <form id="weather">
+        <input type="radio" id="current" name="weather" value="current" checked>Current weather condition
+        <br>
+        <input type="radio" id="forecast" name="weather" value="forecast">Weather forecast
+        <br>
+    </form>
+
+    <select id="cities">
+        <option value="none" selected="selected">---select the city---</option>
+        <option value="Vancouver">Vancouver</option>
+        <option value="Montreal">Montreal</option>
+        <option value="Toronto">Toronto</option>
+    </select>
+
+    <div id="container1">
+        <div id="name"></div>
+        <div id="time"></div>
+        <div id="weather_description"></div>
+        <div id="main_temp"></div>
+        <div id="container"></div>
+    </div>
+
+
+    <button id="btn">Check Weather</button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var $name = $('#name');
+            var $time = $('#time');
+            var $description = $('#weather_description');
+            var $temp = $('#main_temp');
+
+            var checkWeather = '';
+            $('#btn').click(function () {
+                if ($('#current')[0].checked) {
+                    if (document.getElementById('cities').value == 'Vancouver') {
+                        checkWeather = 'https://api.openweathermap.org/data/2.5/weather?id=6173331&APPID=ff05136c9fd16ecab5feff21621df11a';
+                    } else
+                        if (document.getElementById('cities').value == 'Montreal') {
+                            checkWeather = 'https://api.openweathermap.org/data/2.5/weather?id=6077243&APPID=ff05136c9fd16ecab5feff21621df11a';
+                        } else
+                            if (document.getElementById('cities').value == 'Toronto') {
+                                checkWeather = 'https://api.openweathermap.org/data/2.5/weather?id=6087824&APPID=ff05136c9fd16ecab5feff21621df11a';
+                            } else
+                                checkWeather = "";
+
+                    $('#name').html('');
+                    $('#time').html('');
+                    $('#weather_description').html('');
+                    $('#main_temp').html('');
+                    $('#container').empty();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: checkWeather,
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#name').append('<b>Name:</b> ' + data.name);
+                            var dt = data.dt;
+                            var formatTime = new Date(dt * 1000);
+                            $('#time').append('<b>Time:</b>' + formatTime);
+                            if (Array.isArray(data.weather)) {
+                                $('#weather_description').append('<b>Weather Description:</b><ul>');
+                                $('#weather_description').append('<ul>');
+                                data.weather.forEach(function (weather) {
+                                    $('#weather_description').append(`<li>${weather.description}</li>`);
+                                });
+                                $('#weather_description').append('</ul>');
+                            }
+                            var temp = data.main.temp;
+                            var formatTemp = (temp - 273.15).toFixed(0) + " C°";
+                            $('#main_temp').append('<b>Main Temperature: </b>' + formatTemp);
+                        }
+                    })
+                } else
+                    if ($('#forecast')[0].checked) {
+                        if (document.getElementById('cities').value == 'Vancouver') {
+                            checkWeather = 'https://api.openweathermap.org/data/2.5/forecast?id=6173331&APPID=ff05136c9fd16ecab5feff21621df11a ';
+                        } else
+                            if (document.getElementById('cities').value == 'Montreal') {
+                                checkWeather = 'https://api.openweathermap.org/data/2.5/forecast?id=6077243&APPID=ff05136c9fd16ecab5feff21621df11a';
+                            } else
+                                if (document.getElementById('cities').value == 'Toronto') {
+                                    checkWeather = 'https://api.openweathermap.org/data/2.5/forecast?id=6087824&APPID=ff05136c9fd16ecab5feff21621df11a';
+                                } else
+                                    checkWeather = "";
+
+                        $('#name').html('');
+                        $('#time').html('');
+                        $('#weather_description').html('');
+                        $('#main_temp').html('');
+                        $('#container').empty();
+
+                        $.ajax({
+                            type: 'GET',
+                            url: checkWeather,
+                            dataType: 'json',
+                            success: function (data) {
+                                var name = [];
+                                var mainTemp = [];
+                                var description = [];
+
+                                for (var i = 0; i < data.list.length; i++) {
+                                    var hours = data.list[i].dt_txt.substring(11, 16);
+
+                                    if (hours == "12:00") {
+                                        name.push(data.city.name);
+                                        mainTemp.push(data.list[i].main.temp);
+                                        description.push(data.list[i].weather[0].description);
+                                    }
+                                }
+
+                                //var formatTemp = (mainTemp - 273.15).toFixed(0) + " C°";
+
+                                for (var i = 0; i < 3; i++) {
+                                    var text = '';
+                                    text = '<ul>' +
+                                        `<li><b>Name: </b>${name[i]}</li>` +
+                                        `<li><b>Main Temp: </b>${mainTemp[i]}</li>` +
+                                        `<li><b>Weather Description: </b>${description[i]}</li>` +
+                                        '</ul>';
+                                    $('#container').append(text);
+                                }
+
+                            }
+                        })
+                    }
+
+            });
+        })
+    </script>
+
+</body>
+
+</html>
