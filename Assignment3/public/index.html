@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Assignment 3</title>
+</head>
+
+<body>
+  <h3>Fabio Oliveira_300275262_Assignment 3</h3>
+  <header>
+    <div>
+      <h2>Where to go in Vancouver? Filter your favorite restaurants:</h2>
+      <select id="cuisine">
+        <option selected="selected" disabled>Select the cousine</option>
+        <option id="italian" value="italian">Italian</option>
+        <option id="mexican" value="mexican">Mexican</option>
+        <option id="chinese" value="chinese">Chinese</option>
+        <option id="japanese" value="japanese">Japanese</option>
+      </select>
+      <br />
+
+      <select id="sortBy">
+        <option selected="selected" disabled>Sort By</option>
+        <option id="best_match" value="best_match">Best_match</option>
+        <option id="rating" value="rating">Rating</option>
+        <option id="review_count" value="review_count">Review_count</option>
+      </select>
+      <br />
+
+      <select id="pricefilter">
+        <option selected="selected" disabled>Price</option>
+        <option id="inexpensive" value='1'>Inexpensive</option>
+        <option id="moderate" value='2'>Moderate</option>
+        <option id="pricey" value='3'>Pricey</option>
+        <option id="ultra" value='4'>Ultra High-End</option>
+      </select>
+    </div>
+
+    <input id='filter' type="submit" value="Filter">
+  </header>
+  <div id="container"></div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#filter').on('click', function () {
+        $('#container').empty();
+        var selectedCuisine = $('#cuisine').val();
+        var selectedSortBy = $('#sortBy').val();
+        var selectedPrice = $('#pricefilter').val();
+
+        $.ajax({
+          url: "http://localhost:3000/restaurants/" + selectedCuisine + '?sort_by=' + selectedSortBy + '&price=' + selectedPrice,
+          type: 'GET',
+          dataType: 'json',
+          success: function (response) {
+            for (var i = 0; i < response.length; i++) {
+              var name = response[i].name;
+              var businessId = response[i].businessId;
+              var url = response[i].url;
+              var review_count = response[i].review_count;
+              var rating = response[i].rating;
+              var price = response[i].price;
+              var location = response[i].location;
+              $('#container').append("<ul><li>Name: " +
+                name + "</li><li>Url: <a href='" +
+                url + "'>" + url + "</a></li><li>Review Count: " +
+                review_count + "</li><li>Rating: " +
+                rating + "</li><li>Price: " +
+                price + "</li><li>Location: " +
+                location + "</li><br /><a href='#' name=" +
+                businessId + " id='see_reviews" +
+                i + "' onclick='seereview(id, name)'>see reviews (+)</a><div id='readmore_see_reviews" +
+                i + "'></div></ul><br /><hr/>");
+            }
+          }
+        });
+      });
+    });
+    var seereview = function (id, businessId) {
+      var reviewId = id;
+      if ($("#" + id).text() === "see reviews (+)") {
+        $.ajax({
+          url: "http://localhost:3000/reviews/" + businessId,
+          type: 'GET',
+          dataType: 'json',
+          success: function (response) {
+            $("#" + reviewId).text("close reviews (-)");
+            for (var i = 0; i < 3; i++) {
+              var reviews = response[i].review;
+              $("#readmore_" + reviewId).append("<br />- " + reviews + "<br /><br />");
+            }
+          }
+        });
+      }
+      else {
+        $("#" + reviewId).text("see reviews (+)");
+        $("#readmore_" + reviewId).empty();
+      }
+    };
+  </script>
+</body>
+
+</html>
